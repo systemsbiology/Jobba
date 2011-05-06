@@ -1,0 +1,14 @@
+development:
+  host: localhost
+  port: 27017
+  database: task_dashboard_ruote_development
+
+test:
+  host: localhost
+  port: 27017
+  database: task_dashboard_ruote_test
+
+production:
+  host: localhost
+  port: 27017
+  database: task_dashboard_ruote_production
