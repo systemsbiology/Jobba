@@ -21,7 +21,7 @@ describe JobsController do
       post :create, :workflow => "my workflow", :title => "stuff for bob"
 
       response.status.should == 200
-      JSON.parse(response.body)["wfid"].should_not be_nil
+      JSON.parse(response.body)["job_id"].should_not be_nil
     end
 
     it "fails if no workflow if found" do
@@ -34,24 +34,24 @@ describe JobsController do
     before(:each) do
       # create the process
       post :create, :workflow => "my workflow", :title => "stuff for bob"
-      @wfid = JSON.parse(response.body)["wfid"]
+      @job_id = JSON.parse(response.body)["job_id"]
       RuoteKit.engine.wait_for(:slimarray)
     end
 
     it "updates a process with a status notification" do
-      put :update, :id => @wfid, :participant => "slimarray", :status => "hybridized"
-      response.status.should == 200
+      put :update, :id => @job_id, :participant => "slimarray", :status => "hybridized"
+      puts "response body: #{response.body}"
 
       sleep(0.1)
-      RuoteKit.engine.process(@wfid).workitems.first.params["status"].should == "hybridized"
+      RuoteKit.engine.process(@job_id).workitems.first.params["status"].should == "hybridized"
     end
 
     it "returns not found status if the job doesn't exist" do
-      put :update, :id => @wfid, :participant => "slimarray", :status => "complete"
+      put :update, :id => @job_id, :participant => "slimarray", :status => "complete"
       response.status.should == 404
 
       sleep(0.1)
-      RuoteKit.engine.process(@wfid).workitems.first.params["status"].should == "submitted"
+      RuoteKit.engine.process(@job_id).workitems.first.params["status"].should == "submitted"
     end
 
     it "returns not found status if there isn't a matching workitem" do
@@ -59,7 +59,7 @@ describe JobsController do
       response.status.should == 404
 
       sleep(0.1)
-      RuoteKit.engine.process(@wfid).workitems.first.params["status"].should == "submitted"
+      RuoteKit.engine.process(@job_id).workitems.first.params["status"].should == "submitted"
     end
   end
 end
