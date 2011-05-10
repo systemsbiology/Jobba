@@ -35,7 +35,7 @@ describe JobsController do
       # create the process
       post :create, :workflow => "my workflow", :title => "stuff for bob"
       @wfid = JSON.parse(response.body)["wfid"]
-      sleep(0.1)
+      RuoteKit.engine.wait_for(:slimarray)
     end
 
     it "updates a process with a status notification" do
