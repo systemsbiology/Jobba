@@ -25,13 +25,18 @@ RSpec.configure do |config|
   # instead of true.
   #config.use_transactional_fixtures = true
   
-  config.after(:each) do
+  config.before(:each) do
     puts "cleaning mongodb...." if $DEBUG
     Mongoid.database.collections.each do |collection|
       unless collection.name =~ /^system\./
         collection.remove
       end
     end
+
+    RUOTE_STORAGE.purge_type!("expressions")
+    RUOTE_STORAGE.purge_type!("errors")
+    RUOTE_STORAGE.purge_type!("msgs")
+    RUOTE_STORAGE.purge_type!("variables")
     puts "finished cleaning mongodb." if $DEBUG
   end
 end

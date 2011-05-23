@@ -26,6 +26,12 @@ class Job
     end
   end
 
+  def self.all
+    process_statuses = RuoteKit.engine.processes.sort{|a,b| a.launched_time <=> b.launched_time}
+
+    return process_statuses.collect{|p| Job.new(:process_status => p)}
+  end
+
   def notify(status)
     workitem = @process_status.workitems.find{|wi| wi.params["notifies"] == status}
 
@@ -35,6 +41,21 @@ class Job
       return true
     else
       return false
+    end
+  end
+
+  def current_step
+    workflow = Workflow.where(:name => @process_status.definition_name).first
+
+    # assume a sequential process definition (1 workitem)
+    workitem = @process_status.workitems.first
+
+    if workitem
+      step = workflow.workflow_steps.where(:status => workitem.params["status"]).first
+
+      return step
+    else
+      return nil
     end
   end
 end

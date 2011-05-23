@@ -35,12 +35,11 @@ describe JobsController do
       # create the process
       post :create, :workflow => "my workflow", :title => "stuff for bob"
       @job_id = JSON.parse(response.body)["job_id"]
-      RuoteKit.engine.wait_for(:slimarray)
+      sleep(0.1)
     end
 
     it "updates a process with a status notification" do
       put :update, :id => @job_id, :participant => "slimarray", :status => "hybridized"
-      puts "response body: #{response.body}"
 
       sleep(0.1)
       RuoteKit.engine.process(@job_id).workitems.first.params["status"].should == "hybridized"
