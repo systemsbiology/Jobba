@@ -28,6 +28,7 @@ group :development, :test do
   # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
   gem 'ruby-debug19', :require => 'ruby-debug'
   # gem 'ruby-debug'
+  gem 'infinity_test'
 end
 
 gem "ruote", ">=2.2.0"
