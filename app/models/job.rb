@@ -45,17 +45,20 @@ class Job
   end
 
   def current_step
-    workflow = Workflow.where(:name => @process_status.definition_name).first
-
     # assume a sequential process definition (1 workitem)
     workitem = @process_status.workitems.first
+    return nil unless workitem && workflow
 
-    if workitem
-      step = workflow.workflow_steps.where(:status => workitem.params["status"]).first
+    step = workflow.workflow_steps.where(:status => workitem.params["status"]).first
 
-      return step
-    else
-      return nil
-    end
+    return step
+  end
+
+  def workflow
+    Workflow.where(:name => @process_status.definition_name).first
+  end
+
+  def id
+    @process_status.wfid
   end
 end

@@ -52,7 +52,7 @@ describe Job do
   describe "receiving a notification" do
     before(:each) do
       job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-      sleep 1
+      sleep 0.1
       @job = Job.find(job_id)
     end
 
@@ -79,5 +79,20 @@ describe Job do
     sleep 0.1
 
     Job.all.size.should == 3
+  end
+
+  it "has a workflow" do
+    job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
+    sleep 0.1
+    job = Job.find(job_id)
+    
+    job.workflow.should == @workflow
+  end
+
+  it "has an id" do
+    job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
+    sleep 0.1
+    job = Job.find(job_id)
+    job.id.should == job_id
   end
 end
