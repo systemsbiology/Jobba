@@ -14,10 +14,10 @@ describe Job do
       end"
 
     @workflow = Workflow.create(:name => "my workflow", :definition => definition)
-    @step_1 = @workflow.workflow_steps.create(:name => "Submitted", :status => "submitted")
-    @step_2 = @workflow.workflow_steps.create(:name => "Hybridized", :status => "hybridized")
-    @step_3 = @workflow.workflow_steps.create(:name => "Extracted", :status => "extracted")
-    @step_4 = @workflow.workflow_steps.create(:name => "Complete", :status => "complete")
+    @step_1 = @workflow.workflow_steps.create(:name => "Submitted", :status => "submitted", :actionable => false)
+    @step_2 = @workflow.workflow_steps.create(:name => "Hybridized", :status => "hybridized", :actionable => false)
+    @step_3 = @workflow.workflow_steps.create(:name => "Extracted", :status => "extracted", :actionable => true)
+    @step_4 = @workflow.workflow_steps.create(:name => "Complete", :status => "complete", :actionable => false)
   end
 
   it "starts a job if a workflow is found" do
@@ -94,5 +94,18 @@ describe Job do
     sleep 0.1
     job = Job.find(job_id)
     job.id.should == job_id
+  end
+
+  it "provides a JSON representation" do
+    job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
+    sleep 0.1
+    job = Job.find(job_id)
+
+    job.as_json.should == {
+      :id => job_id,
+      :current_step => "Submitted",
+      :actionable => false,
+      :steps => ["Submitted", "Hybridized", "Extracted", "Complete"]
+    }
   end
 end

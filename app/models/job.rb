@@ -61,4 +61,13 @@ class Job
   def id
     @process_status.wfid
   end
+
+  def as_json(options = {})
+    {
+      :id => id,
+      :current_step => current_step.name,
+      :actionable => current_step.actionable,
+      :steps => workflow.workflow_steps.collect{|s| s.name}
+    }
+  end
 end
