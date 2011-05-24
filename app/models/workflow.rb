@@ -1,6 +1,9 @@
 class Workflow
   include Mongoid::Document
+
+  # Note that this name must match the name in the process definition
   field :name, :type => String
+
   field :definition, :type => String
   embeds_many :workflow_steps
 
