@@ -1,5 +1,5 @@
 TaskDashboard::Application.routes.draw do
-  resources :jobs, :only => [:create, :update]
+  resources :jobs, :only => [:index, :show, :create, :update]
 
   # routes to RuoteKit
   match '/_ruote' => RuoteKit::Application

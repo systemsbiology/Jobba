@@ -6,6 +6,40 @@ describe JobsController do
     @job = mock(Job)
   end
 
+  describe "GET 'index'" do
+    it "gets all jobs" do
+      job_1 = mock(Job, :as_json => {:a => "1"})
+      job_2 = mock(Job, :as_json => {:a => "2"})
+      Job.should_receive(:all).and_return([job_1, job_2])
+
+      get :index
+
+      response.status.should == 200
+      JSON.parse(response.body).should == [{"a" => "1"}, {"a" => "2"}]
+    end
+  end
+
+  describe "GET 'show'" do
+    it "gets a specific job" do
+      job_1 = mock(Job, :as_json => {:a => "1"})
+      Job.should_receive(:find).with("20110524-bokobashika").and_return(job_1)
+
+      get :show, :id => "20110524-bokobashika"
+
+      response.status.should == 200
+      JSON.parse(response.body).should == {"a" => "1"}
+    end
+
+    it "returns a 404 if the job isn't found" do
+      Job.should_receive(:find).with("20110524-bokobashika").and_return(nil)
+
+      get :show, :id => "20110524-bokobashika"
+
+      response.status.should == 404
+      JSON.parse(response.body)["message"].should == "Job not found"
+    end
+  end
+
   describe "POST 'create'" do
     it "creates a new process if the workflow is found" do
       Job.should_receive(:start).with(hash_including("workflow" => "my workflow", "title" => "stuff for bob")).

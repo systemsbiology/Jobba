@@ -1,5 +1,20 @@
 class JobsController < ApplicationController
 
+  def index
+    jobs = Job.all
+    render :json => jobs.collect{|j| j.as_json}
+  end
+
+  def show
+    job = Job.find(params[:id])
+
+    if job
+      render :json => job
+    else
+      render :json => {:message => "Job not found"}, :status => :not_found
+    end
+  end
+
   def create
     job_id = Job.start(params)
 
