@@ -3,21 +3,14 @@ require 'spec_helper'
 describe JobsController do
   
   before(:each) do
-    definition = 
-      "Ruote.process_definition :name => 'test', :revision => '0.1' do
-        sequence do
-          slimarray :notifies => 'hybridized', :status => 'submitted'
-          slimarray :notifies => 'complete', :status => 'hybridized'
-          staff_notification :message => 'Data Ready'
-          staff :workflow => 'Email User', :status => 'extracted'
-        end
-      end"
-
-    @workflow = Workflow.create(:name => "my workflow", :definition => definition)
+    @job = mock(Job)
   end
 
   describe "POST 'create'" do
     it "creates a new process if the workflow is found" do
+      Job.should_receive(:start).with(hash_including("workflow" => "my workflow", "title" => "stuff for bob")).
+        and_return("20110524-bokobashika")
+
       post :create, :workflow => "my workflow", :title => "stuff for bob"
 
       response.status.should == 200
@@ -25,6 +18,9 @@ describe JobsController do
     end
 
     it "fails if no workflow if found" do
+      Job.should_receive(:start).with(hash_including("workflow" => "nonexistent workflow", "title" => "stuff for bob")).
+        and_return(nil)
+
       post :create, :workflow => "nonexistent workflow", :title => "stuff for bob"
       response.status.should == 422
     end
@@ -39,26 +35,32 @@ describe JobsController do
     end
 
     it "updates a process with a status notification" do
-      put :update, :id => @job_id, :participant => "slimarray", :status => "hybridized"
+      Job.should_receive(:find).with("20110524-bokobashika").and_return(@job)
+      @job.should_receive(:notify).with("hybridized").and_return(true)
 
-      sleep(0.1)
-      RuoteKit.engine.process(@job_id).workitems.first.params["status"].should == "hybridized"
+      put :update, :id => "20110524-bokobashika", :participant => "slimarray", :status => "hybridized"
+
+      response.status.should == 200
+      JSON.parse(response.body)["message"].should == "Job updated"
     end
 
     it "returns not found status if the job doesn't exist" do
-      put :update, :id => @job_id, :participant => "slimarray", :status => "complete"
-      response.status.should == 404
+      Job.should_receive(:find).with("abcd").and_return(nil)
 
-      sleep(0.1)
-      RuoteKit.engine.process(@job_id).workitems.first.params["status"].should == "submitted"
+      put :update, :id => "abcd", :participant => "slimarray", :status => "complete"
+
+      response.status.should == 404
+      JSON.parse(response.body)["message"].should == "Job not found"
     end
 
     it "returns not found status if there isn't a matching workitem" do
-      put :update, :id => "abcd", :participant => "slimarray", :status => "hybridized"
-      response.status.should == 404
+      Job.should_receive(:find).with("20110524-bokobashika").and_return(@job)
+      @job.should_receive(:notify).with("hybridized").and_return(false)
 
-      sleep(0.1)
-      RuoteKit.engine.process(@job_id).workitems.first.params["status"].should == "submitted"
+      put :update, :id => "20110524-bokobashika", :participant => "slimarray", :status => "hybridized"
+
+      response.status.should == 404
+      JSON.parse(response.body)["message"].should == "No workitem responding to this status found"
     end
   end
 end
