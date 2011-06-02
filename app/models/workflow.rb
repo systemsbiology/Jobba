@@ -1,14 +1,15 @@
 class Workflow
   include Mongoid::Document
 
-  # Note that this name must match the name in the process definition
-  field :name, :type => String
-
   field :definition, :type => String
   embeds_many :workflow_steps
 
+  def name
+    tree && tree[1] && tree[1]["name"]
+  end
+
   def revision
-    tree[1]['revision']
+    tree && tree[1] && tree[1]['revision']
   end
 
   def tree
