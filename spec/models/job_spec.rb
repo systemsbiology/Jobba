@@ -9,7 +9,7 @@ describe Job do
           slimarray :notifies => 'hybridized', :status => 'submitted'
           slimarray :notifies => 'complete', :status => 'hybridized'
           staff_notification :message => 'Data Ready'
-          staff :workflow => 'Email User', :status => 'extracted'
+          staff :action => 'Email User', :status => 'extracted'
         end
       end"
 
@@ -96,6 +96,20 @@ describe Job do
     job.id.should == job_id
   end
 
+  it "has a title" do
+    job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
+    sleep 0.1
+    job = Job.find(job_id)
+    job.title.should == "stuff for bob"
+  end
+
+  it "has details" do
+    job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
+    sleep 0.1
+    job = Job.find(job_id)
+    job.details.should == "not important"
+  end
+
   it "provides a JSON representation" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
     sleep 0.1
@@ -103,6 +117,8 @@ describe Job do
 
     job.as_json.should == {
       :id => job_id,
+      :title => "stuff for bob",
+      :details => "not important",
       :current_step => "Submitted",
       :actionable => false,
       :steps => ["Submitted", "Hybridized", "Extracted", "Complete"]
