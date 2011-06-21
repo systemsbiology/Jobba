@@ -84,8 +84,13 @@ class Job
       :title => title,
       :details => details,
       :current_step => current_step.name,
-      :actionable => current_step.actionable,
-      :steps => workflow.workflow_steps.collect{|s| s.name}
+      :steps => workflow.workflow_steps.collect do |step|
+        {
+          :name => step.name,
+          :description => step.description,
+          :actionable => step.actionable
+        }
+      end
     }
   end
 

@@ -1,4 +1,8 @@
 TaskDashboard::Application.routes.draw do
+  mount Bulk::Sproutcore.new => "/_sproutcore"
+
+  bulk_routes "/api/bulk"
+
   resources :jobs, :only => [:index, :show, :create, :update]
 
   # routes to RuoteKit

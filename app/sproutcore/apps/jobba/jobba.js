@@ -5,7 +5,7 @@
 /*globals Jobba */
 
 Jobba = SC.Application.create({
-  store: SC.Store.create().from(SC.Record.fixtures)
+  store: SC.Store.create().from('BulkApi.BulkDataSource')
 });
 
 // Model
@@ -17,7 +17,7 @@ Jobba.Job = SC.Record.extend({
 
   title: SC.Record.attr(String),
   details: SC.Record.attr(String),
-  currentStep: SC.Record.attr(String),
+  currentStep: SC.Record.attr(String, { key: 'current_step' }),
   steps: SC.Record.toMany('Jobba.Step', { nested: true }),
 
   completeStep: function() {
@@ -42,6 +42,7 @@ Jobba.Job = SC.Record.extend({
     }
   }
 });
+Jobba.Job.resourceName = "job";
 
 Jobba.Step = SC.Record.extend({
   primaryKey: 'id',
@@ -57,7 +58,6 @@ Jobba.Job.FIXTURES = [
     "title": "Bob",
     "details": "16 yeast samples",
     "currentStep": "Hybridized",
-    "actionable": false,
     "steps": [
      {"name": "Submitted", "description":"Waiting for SLIMarray hybridization", "actionable":false},
      {"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false},
@@ -71,7 +71,6 @@ Jobba.Job.FIXTURES = [
     "title": "Jim",
     "details": "8 yeast samples",
     "currentStep": "Extracted",
-    "actionable": true,
     "steps": [
      {"name": "Submitted", "description":"Waiting for SLIMarray hybridization", "actionable":false},
      {"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false},
@@ -83,7 +82,6 @@ Jobba.Job.FIXTURES = [
     "title": "Joe",
     "details": "24 yeast samples",
     "currentStep": "Submitted",
-    "actionable": false,
     "steps": [
      {"name": "Submitted", "description":"Waiting for SLIMarray hybridization", "actionable":false},
      {"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false},

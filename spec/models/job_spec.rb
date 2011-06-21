@@ -14,10 +14,14 @@ describe Job do
       end"
 
     @workflow = Workflow.create(:name => "my workflow", :definition => definition)
-    @step_1 = @workflow.workflow_steps.create(:name => "Submitted", :status => "submitted", :actionable => false)
-    @step_2 = @workflow.workflow_steps.create(:name => "Hybridized", :status => "hybridized", :actionable => false)
-    @step_3 = @workflow.workflow_steps.create(:name => "Extracted", :status => "extracted", :actionable => true)
-    @step_4 = @workflow.workflow_steps.create(:name => "Complete", :status => "complete", :actionable => false)
+    @step_1 = @workflow.workflow_steps.create(:name => "Submitted", :status => "submitted", :actionable => false,
+      :description => "Waiting for SLIMarray hybridization")
+    @step_2 = @workflow.workflow_steps.create(:name => "Hybridized", :status => "hybridized", :actionable => false,
+      :description => "Waiting for raw data to go into SLIMarray")
+    @step_3 = @workflow.workflow_steps.create(:name => "Extracted", :status => "extracted", :actionable => true,
+      :description => "Prepare data, notify user")
+    @step_4 = @workflow.workflow_steps.create(:name => "Complete", :status => "complete", :actionable => false,
+      :description => "User has been notified")
   end
 
   it "starts a job if a workflow is found" do
@@ -120,8 +124,12 @@ describe Job do
       :title => "stuff for bob",
       :details => "not important",
       :current_step => "Submitted",
-      :actionable => false,
-      :steps => ["Submitted", "Hybridized", "Extracted", "Complete"]
+      :steps => [
+        {:name => "Submitted", :description => "Waiting for SLIMarray hybridization", :actionable => false},
+        {:name => "Hybridized", :description => "Waiting for raw data to go into SLIMarray", :actionable => false},
+        {:name => "Extracted", :description => "Prepare data, notify user", :actionable => true},
+        {:name => "Complete", :description => "User has been notified", :actionable => false}
+      ]
     }
   end
 end

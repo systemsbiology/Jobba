@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.6'
+gem 'rails', '3.0.9'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -39,3 +39,4 @@ gem 'erwin-ruote-mongodb', :git=>"git://github.com/erwin/ruote-mongodb.git"
 gem 'acts_as_list_mongoid', :git=>"git://github.com/kristianmandrup/acts_as_list_mongoid.git"
 gem 'mongoid_embedded_helper', :git => "git://github.com/kristianmandrup/mongoid_embedded_helper.git"
 gem 'mongoid_adjust', :git => "git://github.com/kristianmandrup/mongoid_adjust.git"
+gem 'bulk_api'

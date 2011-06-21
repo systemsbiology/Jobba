@@ -4,5 +4,7 @@
 # ==========================================================================
 
 # Add initial buildfile information here
-config :all, :required => ["sproutcore/core_foundation", "sproutcore/datastore"],
-       :theme => "sproutcore/empty_theme", :title => "Job Dashboard"
+config :all, :required => ["sproutcore/core_foundation", "sproutcore/datastore",
+  "bulk_data_source"], :theme => "sproutcore/empty_theme", :title => "Job Dashboard"
+
+proxy "/api", :to => "localhost:3000"
