@@ -1,0 +1,103 @@
+/* ==========================================================================
+*  Project:   Jobba
+*  Copyright: @2011 My Company, Inc.
+*  ==========================================================================
+*/
+
+@import "compass/css3";
+@import "compass/reset";
+
+/* CSS Reset */
+@include global-reset;
+
+/* General purpose */
+
+body {
+  font-family: "Trebuchet MS", Verdana, serif;
+}
+
+.rounded-corners {
+  -moz-border-radius: 10px; /* Firefox */
+  -webkit-border-radius: 10px; /* Safari, Chrome */
+  border-radius: 10px; /* CSS3 */
+}
+
+.sc-view {
+  position: relative;
+  overflow: visible;
+}
+
+.sc-button {
+  @include background-image(linear-gradient(#F9F9F9 1%, #DDD, #F2F2F2, #F7F7F7));
+  border: 1px solid #828282;
+  color: #000;
+  margin-top: 4px;
+  padding: 3px 10px;
+
+  &:hover {
+    @include background-image(linear-gradient(#FFF 1%, #E2E2E2, #F7F7F7, #FCFCFC));
+  }
+
+  &.is-active {
+    @include background-image(linear-gradient(#EFEFEF 1%, #D3D3D3, #E8E8E8, #EDEDED));
+  }
+}
+
+/* Specific Elements*/
+
+h1 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+div#jobba {
+  width: 960px;
+  margin: 20px auto;
+}
+
+li.job {
+  padding-top: 20px;
+  clear: both;
+}
+
+ul.steps {
+  margin-top: 5px;
+  float: left;
+}
+
+li.step {
+  display: inline-block;
+  vertical-align: top;
+}
+
+li.step > div {
+  height: 50px;
+  padding: 10px 30px;
+  border: 1px solid #EEEEEE;
+  text-align: middle;
+  background-color: #DDDDDD;
+  margin: 2px;
+}
+
+li.step:first-child div {
+  -moz-border-radius: 10px 0 0 10px; /* Firefox */
+  -webkit-border-radius: 10px 0 0 10px; /* Safari, Chrome */
+  border-radius: 10px 0 0 10px; /* CSS3 */
+}
+
+li.step:last-child div {
+  -moz-border-radius: 0 10px 10px 0; /* Firefox */
+  -webkit-border-radius: 0 10px 10px 0; /* Safari, Chrome */
+  border-radius: 0 10px 10px 0; /* CSS3 */
+}
+
+li.step > div.is-current-step {
+  background-color: #BDF8BB;
+}
+
+li.step > div.is-actionable.is-current-step {
+  background-color: #F17B77;
+}
