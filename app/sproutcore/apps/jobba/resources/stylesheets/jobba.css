@@ -66,38 +66,42 @@ li.job {
 ul.steps {
   margin-top: 5px;
   float: left;
+  border: 1px solid #000000;
+  padding: 4px;
 }
 
 li.step {
+  height: 60px;
   display: inline-block;
   vertical-align: top;
-}
-
-li.step > div {
-  height: 50px;
   padding: 10px 30px;
-  border: 1px solid #EEEEEE;
-  text-align: middle;
+  border: 1px solid #BBBBBB;
+  text-align: center;
   background-color: #DDDDDD;
   margin: 2px;
+
+  &:first-child {
+    -moz-border-radius: 10px 0 0 10px; /* Firefox */
+    -webkit-border-radius: 10px 0 0 10px; /* Safari, Chrome */
+    border-radius: 10px 0 0 10px; /* CSS3 */
+  }
+
+  &:last-child {
+    -moz-border-radius: 0 10px 10px 0; /* Firefox */
+    -webkit-border-radius: 0 10px 10px 0; /* Safari, Chrome */
+    border-radius: 0 10px 10px 0; /* CSS3 */
+  }
+
+  &.is-current-step {
+    background-color: #BDF8BB;
+
+    &.is-actionable {
+      background-color: #F17B77;
+    }
+  }
+
+  .description {
+    font-size: 75%;
+  }
 }
 
-li.step:first-child div {
-  -moz-border-radius: 10px 0 0 10px; /* Firefox */
-  -webkit-border-radius: 10px 0 0 10px; /* Safari, Chrome */
-  border-radius: 10px 0 0 10px; /* CSS3 */
-}
-
-li.step:last-child div {
-  -moz-border-radius: 0 10px 10px 0; /* Firefox */
-  -webkit-border-radius: 0 10px 10px 0; /* Safari, Chrome */
-  border-radius: 0 10px 10px 0; /* CSS3 */
-}
-
-li.step > div.is-current-step {
-  background-color: #BDF8BB;
-}
-
-li.step > div.is-actionable.is-current-step {
-  background-color: #F17B77;
-}

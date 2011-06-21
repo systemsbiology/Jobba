@@ -2,14 +2,13 @@
 
 {{#collection Jobba.JobsCollectionView contentBinding="Jobba.jobListController" itemClass="job"}}
   <h2>{{content.title}} - {{content.details}}</h2>
-  {{#each content.steps class="steps rounded-corners" itemClass="step"}}
-    {{#view Jobba.StepView classBinding="isCurrentStep isActionable"}}
-      {{name}}
-      {{#if isActionable}}
-        {{#view SC.Button classBinding="isActive" action="completeStep"}}
-          Done
-        {{/view}}
-      {{/if}}
-    {{/view}}
-  {{/each}}
+  {{#collection Jobba.StepsCollectionView class="steps rounded-corners" itemClass="step" itemClassBinding="isCurrentStep isActionable"}}
+    {{name}}
+    {{#if isActionable}}
+      <div class="description">{{description}}</div>
+      {{#view SC.Button classBinding="isActive" action="completeStep"}}
+        Done
+      {{/view}}
+    {{/if}}
+  {{/collection}}
 {{/collection}}

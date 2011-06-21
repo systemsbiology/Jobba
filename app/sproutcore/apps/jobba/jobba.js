@@ -65,12 +65,6 @@ Jobba.Job.FIXTURES = [
      {"name": "Sliced", "description":"", "actionable":true},
      {"name": "Diced", "description":"", "actionable":true},
      {"name": "Completed", "description":"User has been notified", "actionable":false}
-      //SC.Object.create({"name": "Submitted", "description":"Waiting for SLIMarray hybridization", "actionable":false}),
-      //SC.Object.create({"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false}),
-      //SC.Object.create({"name": "Extracted", "description":"Prepare data, notify user", "actionable":true}),
-      //SC.Object.create({"name": "Sliced", "description":"", "actionable":true}),
-      //SC.Object.create({"name": "Diced", "description":"", "actionable":true}),
-      //SC.Object.create({"name": "Completed", "description":"User has been notified", "actionable":false})
     ]
   },
   { "id": "2",
@@ -83,10 +77,6 @@ Jobba.Job.FIXTURES = [
      {"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false},
      {"name": "Extracted", "description":"Prepare data, notify user", "actionable":true},
      {"name": "Completed", "description":"User has been notified", "actionable":false}
-      //SC.Object.create({"name": "Submitted", "description":"Waiting for SLIMarray hybridization", "actionable":false}),
-      //SC.Object.create({"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false}),
-      //SC.Object.create({"name": "Extracted", "description":"Prepare data, notify user", "actionable":true}),
-      //SC.Object.create({"name": "Completed", "description":"User has been notified", "actionable":false})
     ]
   },
   { "id": "3",
@@ -99,10 +89,6 @@ Jobba.Job.FIXTURES = [
      {"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false},
      {"name": "Extracted", "description":"Prepare data, notify user", "actionable":true},
      {"name": "Completed", "description":"User has been notified", "actionable":false}
-      //SC.Object.create({"name": "Submitted", "description":"Waiting for SLIMarray hybridization", "actionable":false}),
-      //SC.Object.create({"name": "Hybridized", "description":"Waiting for raw data to go into SLIMarray", "actionable":false}),
-      //SC.Object.create({"name": "Extracted", "description":"Prepare data, notify user", "actionable":true}),
-      //SC.Object.create({"name": "Completed", "description":"User has been notified", "actionable":false})
     ]
   }
 ];
@@ -118,31 +104,37 @@ Jobba.jobListController = SC.ArrayController.create({
 Jobba.JobsCollectionView = SC.TemplateCollectionView.extend({
 });
 
-Jobba.StepView = SC.TemplateView.extend({
-  nameBinding: '.parentView.content.name',
-  jobBinding: '.parentView.parentView.parentView.content',
-  currentStepBinding: '.parentView.parentView.parentView.content.currentStep',
-  actionableBinding: '.parentView.content.actionable',
+Jobba.StepsCollectionView = SC.TemplateCollectionView.extend({
+  contentBinding: ".parentView.content.steps",
 
-  isCurrentStep: function() {
-    var name = this.get('name');
-    var currentStep = this.getPath('currentStep');
+  itemView: SC.TemplateView.extend({
+    nameBinding: '.content.name',
+    descriptionBinding: '.content.description',
+    jobBinding: '.parentView.parentView.content',
+    currentStepBinding: '.parentView.parentView.content.currentStep',
+    actionableBinding: '.content.actionable',
 
-    return name === currentStep;
-  }.property('currentStep').cacheable(),
+    isCurrentStep: function() {
+      var name = this.get('name');
+      var currentStep = this.get('currentStep');
 
-  isActionable: function() {
-    var isCurrentStep = this.get('isCurrentStep');
-    var actionable = this.get('actionable');
+      return name === currentStep;
+    }.property('currentStep').cacheable(),
 
-    return isCurrentStep && actionable;
-  }.property('actionable', 'isCurrentStep').cacheable(),
+    isActionable: function() {
+      var isCurrentStep = this.get('isCurrentStep');
+      var actionable = this.get('actionable');
 
-  completeStep: function() {
-    var job = this.get('job');
+      return isCurrentStep && actionable;
+    }.property('actionable', 'isCurrentStep').cacheable(),
 
-    job.completeStep();
-  }
+    completeStep: function() {
+      var job = this.get('job');
+
+      // FIXME: views shouldn't directly access models, right?
+      job.completeStep();
+    }
+  })
 });
 
 // Startup
