@@ -9,7 +9,7 @@ class JobsController < ApplicationController
     job = Job.find(params[:id])
 
     if job
-      render :json => job
+      render :json => job.as_json
     else
       render :json => {:message => "Job not found"}, :status => :not_found
     end
