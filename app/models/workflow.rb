@@ -1,5 +1,6 @@
 class Workflow
   include Mongoid::Document
+  include Stepable
 
   field :definition, :type => String
 
