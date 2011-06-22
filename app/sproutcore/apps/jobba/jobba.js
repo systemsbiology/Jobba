@@ -5,7 +5,67 @@
 /*globals Jobba */
 
 Jobba = SC.Application.create({
-  store: SC.Store.create().from('BulkApi.BulkDataSource')
+  store: SC.Store.create().from('Jobba.DataSource')
+});
+
+/* The data source only implements the "index" and "update" actions */
+Jobba.DataSource = SC.DataSource.extend(
+/** @scope Jobba.DataSource.prototype */ {
+
+  fetch: function(store, query) {
+
+    if (query.recordType === Jobba.Job) {
+      SC.Request.getUrl('/jobba/jobs.json').header({
+        'Accept': 'application/json'
+      }).json().notify(this, 'didFetchQuery', store, query).send();
+
+      return YES;
+    } 
+
+    return NO ; // return YES if you handled the query
+  },
+
+  didFetchQuery: function(response, store, query) {
+    if(SC.ok(response)) {
+      store.loadRecords(query.recordType, response.get('body'));
+      store.dataSourceDidFetchQuery(query);
+    } else store.dataSourceDidErrorQuery(query, response);	
+  },
+
+  updateRecord: function(store, storeKey) {
+    if (SC.kindOf(store.recordTypeFor(storeKey), Jobba.Job)) {
+      var id = store.idFor(storeKey);
+      var url = this._urlFor('job', id);
+      var status = store.readDataHash(storeKey).current_step.toLowerCase();
+
+      SC.Request.putUrl(url)
+        .header({
+          'Accept': 'application/json'
+        }).json()
+        .notify(this, this.didUpdateJob, store, storeKey)
+        .send( {status: status} );
+      return YES;
+
+    } else return NO;
+  },
+  
+  didUpdateJob: function(response, store, storeKey) {
+    if (SC.ok(response)) {
+      store.dataSourceDidComplete(storeKey, response.get('body').reservation);
+   
+    } else store.dataSourceDidError(storeKey, response);
+  },
+
+  /** @private
+    Produce URLs for Rails resources
+  */
+  _urlFor: function(resourceName, id) {
+    if(id) {
+      return '/jobba/' + resourceName + 's/' + id + '.json';
+    } else {
+      return '/jobba/' + resourceName + 's.json';
+    }
+  }
 });
 
 // Model
@@ -36,9 +96,7 @@ Jobba.Job = SC.Record.extend({
     if(currentIndex < stepNames.length) {
       nextStep = stepNames.objectAt(currentIndex + 1);
       this.set('currentStep', nextStep);
-
-      // Assume a step is not actionable until the server says otherwise
-      //this.set('actionable', false);
+      this.commitRecord();
     }
   }
 });

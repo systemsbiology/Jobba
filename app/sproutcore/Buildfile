@@ -7,4 +7,4 @@
 config :all, :required => ["sproutcore/core_foundation", "sproutcore/datastore",
   "bulk_data_source"], :theme => "sproutcore/empty_theme", :title => "Job Dashboard"
 
-proxy "/api", :to => "localhost:3000"
+proxy "/jobba", :to => "localhost:3000"
