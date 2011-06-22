@@ -2,7 +2,6 @@ class Workflow
   include Mongoid::Document
 
   field :definition, :type => String
-  embeds_many :workflow_steps
 
   def name
     tree && tree[1] && tree[1]["name"]

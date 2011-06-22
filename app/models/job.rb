@@ -1,10 +1,7 @@
 class Job
-  extend ActiveSupport::Memoizable
+  include Stepable
 
-  # use class << self to easily memoize class methods
   class << self
-    extend ActiveSupport::Memoizable
-
     def start(params)
       workflow = Workflow.where(:name => params[:workflow]).first
 
@@ -32,8 +29,6 @@ class Job
 
       return process_statuses.collect{|p| Job.new(:process_status => p)}
     end
-
-    memoize :all
   end
 
   def initialize(attributes)
@@ -41,7 +36,13 @@ class Job
   end
 
   def notify(status)
-    workitem = @process_status.workitems.find{|wi| wi.params["notifies"] == status}
+    # find the step being specified
+    step = steps.find{|s| s[:status] == status}
+    step_index = steps.index(step)
+
+    # then see if we're currently on the prior step
+    previous_step = steps[step_index - 1]
+    workitem = @process_status.workitems.find{|wi| wi.params["status"] == previous_step[:status]}
 
     if workitem
       RuoteKit.engine.storage_participant.reply(workitem)
@@ -55,9 +56,9 @@ class Job
   def current_step
     # assume a sequential process definition (1 workitem)
     workitem = @process_status.workitems.first
-    return nil unless workitem && workflow
+    return nil unless workitem
 
-    step = workflow.workflow_steps.where(:status => workitem.params["status"]).first
+    step = steps.find{|s| s[:status] == workitem.params["status"]}
 
     return step
   end
@@ -78,21 +79,17 @@ class Job
     @process_status.variables["details"]
   end
 
+  def tree
+    @process_status.current_tree
+  end
+
   def as_json(options = {})
     {
       :id => id,
       :title => title,
       :details => details,
-      :current_step => current_step.name,
-      :steps => workflow.workflow_steps.collect do |step|
-        {
-          :name => step.name,
-          :description => step.description,
-          :actionable => step.actionable
-        }
-      end
+      :current_step => current_step[:status],
+      :steps => steps
     }
   end
-
-  memoize :workflow
 end

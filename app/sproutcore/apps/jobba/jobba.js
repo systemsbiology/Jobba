@@ -36,7 +36,7 @@ Jobba.DataSource = SC.DataSource.extend(
     if (SC.kindOf(store.recordTypeFor(storeKey), Jobba.Job)) {
       var id = store.idFor(storeKey);
       var url = this._urlFor('job', id);
-      var status = store.readDataHash(storeKey).current_step.toLowerCase();
+      var status = store.readDataHash(storeKey).current_step;
 
       SC.Request.putUrl(url)
         .header({
@@ -90,11 +90,11 @@ Jobba.Job = SC.Record.extend({
     currentStep = this.get('currentStep');
     steps = this.get('steps');
 
-    stepNames = steps.mapProperty('name');
+    stepStatuses = steps.mapProperty('status');
 
-    currentIndex = stepNames.indexOf(currentStep);
-    if(currentIndex < stepNames.length) {
-      nextStep = stepNames.objectAt(currentIndex + 1);
+    currentIndex = stepStatuses.indexOf(currentStep);
+    if(currentIndex < stepStatuses.length) {
+      nextStep = stepStatuses.objectAt(currentIndex + 1);
       this.set('currentStep', nextStep);
       this.commitRecord();
     }
@@ -105,9 +105,15 @@ Jobba.Job.resourceName = "job";
 Jobba.Step = SC.Record.extend({
   primaryKey: 'id',
 
-  name: SC.Record.attr(String),
+  status: SC.Record.attr(String),
   description: SC.Record.attr(String),
-  actionable: SC.Record.attr(Boolean, {defaultValue: NO})
+  actionable: SC.Record.attr(Boolean, {defaultValue: NO}),
+
+  name: function() {
+    var status = this.get('status');
+
+    return status.capitalize();
+  }.property('status').cacheable()
 });
 
 
@@ -164,6 +170,7 @@ Jobba.StepsCollectionView = SC.TemplateCollectionView.extend({
   contentBinding: ".parentView.content.steps",
 
   itemView: SC.TemplateView.extend({
+    statusBinding: '.content.status',
     nameBinding: '.content.name',
     descriptionBinding: '.content.description',
     jobBinding: '.parentView.parentView.content',
@@ -171,10 +178,10 @@ Jobba.StepsCollectionView = SC.TemplateCollectionView.extend({
     actionableBinding: '.content.actionable',
 
     isCurrentStep: function() {
-      var name = this.get('name');
+      var status = this.get('status');
       var currentStep = this.get('currentStep');
 
-      return name === currentStep;
+      return status === currentStep;
     }.property('currentStep').cacheable(),
 
     isActionable: function() {
