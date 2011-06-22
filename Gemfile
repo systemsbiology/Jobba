@@ -40,3 +40,4 @@ gem 'acts_as_list_mongoid', :git=>"git://github.com/kristianmandrup/acts_as_list
 gem 'mongoid_embedded_helper', :git => "git://github.com/kristianmandrup/mongoid_embedded_helper.git"
 gem 'mongoid_adjust', :git => "git://github.com/kristianmandrup/mongoid_adjust.git"
 gem 'bulk_api'
+gem 'json', '1.5.3'
