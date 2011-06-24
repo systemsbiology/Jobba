@@ -70,28 +70,27 @@ GEM
     bson (1.3.1)
     bson_ext (1.3.1)
     builder (2.1.2)
-    bulk_api (0.0.3)
-      rails (~> 3.0)
-      sproutcore
-    chunky_png (1.1.2)
     columnize (0.3.3)
-    compass (0.10.6)
-      haml (>= 3.0.4)
-    daemons (1.1.4)
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    eventmachine (0.12.10)
-    extlib (0.9.15)
     file-tail (1.0.5)
       spruz (>= 0.1.0)
+    fuubar (0.0.5)
+      rspec (~> 2.0)
+      rspec-instafail (~> 0.1.4)
+      ruby-progressbar (~> 0.0.10)
+    growl (1.0.3)
+    guard (0.4.2)
+      thor (~> 0.14.6)
+    guard-rspec (0.4.0)
+      guard (>= 0.4.0)
+    guard-spork (0.2.0)
+      guard (>= 0.2.2)
+      spork (>= 0.8.4)
     haml (3.0.25)
     i18n (0.5.0)
-    infinity_test (1.0.3)
-      notifiers (>= 1.1.0)
-      watchr (>= 0.7)
     json (1.5.3)
-    json_pure (1.4.6)
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
     mail (2.2.19)
@@ -106,7 +105,6 @@ GEM
       activemodel (~> 3.0)
       mongo (~> 1.3)
       tzinfo (~> 0.3.22)
-    notifiers (1.1.0)
     polyglot (0.3.1)
     rack (1.2.3)
     rack-mount (0.6.14)
@@ -127,6 +125,7 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.9.2)
+    rb-fsevent (0.4.0)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
@@ -134,6 +133,7 @@ GEM
     rspec-core (2.5.2)
     rspec-expectations (2.5.0)
       diff-lcs (~> 1.1.2)
+    rspec-instafail (0.1.8)
     rspec-mocks (2.5.0)
     rspec-rails (2.5.0)
       actionpack (~> 3.0)
@@ -148,6 +148,7 @@ GEM
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby-debug-base19 (>= 0.11.19)
+    ruby-progressbar (0.0.10)
     ruby2ruby (1.2.5)
       ruby_parser (~> 2.0)
       sexp_processor (~> 3.0)
@@ -187,28 +188,13 @@ GEM
       file-tail (>= 1.0.5)
       ruby2ruby (>= 1.2.5)
       sexp_processor (>= 3.0.5)
-    sproutcore (1.5.0)
-      chunky_png (~> 1.1.0)
-      compass (~> 0.10.5)
-      erubis (~> 2.6.6)
-      eventmachine (>= 0.12.10)
-      extlib (~> 0.9.15)
-      haml (~> 3.0.24)
-      json_pure (~> 1.4.6)
-      rack (~> 1.2.1)
-      thin (= 1.2.8)
-      thor (~> 0.14.3)
+    spork (0.9.0.rc8)
     spruz (0.2.8)
     sqlite3 (1.3.3)
-    thin (1.2.8)
-      daemons (>= 1.0.9)
-      eventmachine (>= 0.12.6)
-      rack (>= 1.0.0)
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     tzinfo (0.3.28)
-    watchr (0.7)
 
 PLATFORMS
   ruby
@@ -216,16 +202,20 @@ PLATFORMS
 DEPENDENCIES
   acts_as_list_mongoid!
   bson_ext
-  bulk_api
   erwin-ruote-mongodb!
-  infinity_test
+  fuubar
+  growl
+  guard-rspec
+  guard-spork
   json (= 1.5.3)
   mongoid (~> 2.0.0)
   mongoid_adjust!
   mongoid_embedded_helper!
   rails (= 3.0.6)
+  rb-fsevent
   rspec-rails (~> 2.5.0)
   ruby-debug19
   ruote (>= 2.2.0)
   ruote-kit (>= 2.2.0)
+  spork (= 0.9.0.rc8)
   sqlite3
