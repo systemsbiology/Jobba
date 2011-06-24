@@ -2,6 +2,10 @@ require 'rubygems'
 require 'spork'
 
 Spork.prefork do
+  # https://github.com/timcharper/spork/wiki/Spork.trap_method-Jujutsu
+  require "rails/mongoid"
+  Spork.trap_class_method(Rails::Mongoid, :load_models)
+
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
