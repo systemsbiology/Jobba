@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Job do
-  
   before(:each) do
     definition = 
       "Ruote.process_definition :name => 'my workflow', :revision => '0.1' do
@@ -32,7 +31,6 @@ describe Job do
   describe "finding a job" do
     before(:each) do
       @job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-      sleep 0.2
     end
 
     it "finds a job by the job_id" do
@@ -49,7 +47,6 @@ describe Job do
   describe "receiving a notification" do
     before(:each) do
       job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-      sleep 0.1
       @job = Job.find(job_id)
     end
 
@@ -64,7 +61,6 @@ describe Job do
 
   it "provides the current step" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.2
 
     Job.find(job_id).current_step.should == {:status => 'submitted', :description => 'Waiting for SLIMarray hybridization', :actionable => false}
   end
@@ -73,14 +69,12 @@ describe Job do
     job_id_1 = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
     job_id_2 = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
     job_id_3 = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.2
 
     Job.all.size.should == 3
   end
 
   it "has a workflow" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.1
     job = Job.find(job_id)
     
     job.workflow.should == @workflow
@@ -88,28 +82,27 @@ describe Job do
 
   it "has an id" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.1
     job = Job.find(job_id)
+
     job.id.should == job_id
   end
 
   it "has a title" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.1
     job = Job.find(job_id)
+
     job.title.should == "stuff for bob"
   end
 
   it "has details" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.1
     job = Job.find(job_id)
+
     job.details.should == "not important"
   end
 
   it "provides a JSON representation" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.1
     job = Job.find(job_id)
 
     job.as_json.should == {

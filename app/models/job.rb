@@ -11,6 +11,16 @@ class Job
         workflow.definition, {}, {:title => params[:title], :details => params[:details]}
       )
 
+      # give a job 30 seconds to start
+      Timeout.timeout 30 do
+        process_status = RuoteKit.engine.process(job_id)
+
+        until(process_status)
+          sleep 0.1
+          process_status = RuoteKit.engine.process(job_id)
+        end
+      end
+
       return job_id
     end
 
