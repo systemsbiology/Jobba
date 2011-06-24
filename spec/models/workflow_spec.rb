@@ -12,7 +12,7 @@ describe Workflow do
         end
       end"
 
-    @workflow = Workflow.create(:definition => definition)
+    @workflow = Workflow.create(:definition => definition, :name => "my workflow")
   end
 
   it "has a name" do

@@ -3,10 +3,7 @@ class Workflow
   include Stepable
 
   field :definition, :type => String
-
-  def name
-    tree && tree[1] && tree[1]["name"]
-  end
+  field :name, :type => String
 
   def revision
     tree && tree[1] && tree[1]['revision']
