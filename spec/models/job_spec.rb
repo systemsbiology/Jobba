@@ -32,7 +32,7 @@ describe Job do
   describe "finding a job" do
     before(:each) do
       @job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-      sleep 0.1
+      sleep 0.2
     end
 
     it "finds a job by the job_id" do
@@ -64,7 +64,7 @@ describe Job do
 
   it "provides the current step" do
     job_id = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.1
+    sleep 0.2
 
     Job.find(job_id).current_step.should == {:status => 'submitted', :description => 'Waiting for SLIMarray hybridization', :actionable => false}
   end
@@ -73,7 +73,7 @@ describe Job do
     job_id_1 = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
     job_id_2 = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
     job_id_3 = Job.start(:workflow => "my workflow", :title => "stuff for bob", :details => "not important")
-    sleep 0.1
+    sleep 0.2
 
     Job.all.size.should == 3
   end
