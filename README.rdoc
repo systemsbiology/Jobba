@@ -1,0 +1,5 @@
+WARNING: This is an incomplete project. The basic core works, but it probably still needs a lot of work to be useful.
+
+Jobba is a tool for monitoring job progression through a workflow.
+
+The back end uses MongoDB for storage and for persistence of the Ruote data. The front end uses SproutCore for the user interface. 
